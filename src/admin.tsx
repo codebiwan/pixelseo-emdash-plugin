@@ -8,13 +8,13 @@
  */
 
 import {
-  Image,
-  CheckCircle,
-  WarningCircle,
-  FloppyDisk,
-  CircleNotch,
-  Sparkle,
-  ArrowSquareOut,
+  ImageIcon,
+  CheckCircleIcon,
+  WarningCircleIcon,
+  FloppyDiskIcon,
+  CircleNotchIcon,
+  SparkleIcon,
+  ArrowSquareOutIcon,
 } from '@phosphor-icons/react';
 import type { PluginAdminExports } from 'emdash';
 import { apiFetch, parseApiResponse } from 'emdash/plugin-utils';
@@ -53,7 +53,7 @@ function StatusWidget() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <CircleNotch className="h-5 w-5 animate-spin text-muted-foreground" />
+        <CircleNotchIcon className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -64,7 +64,7 @@ function StatusWidget() {
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <div className={`p-2 rounded-full ${configured ? 'bg-green-100 dark:bg-green-900/30' : 'bg-yellow-100 dark:bg-yellow-900/30'}`}>
-          <Image className={`h-5 w-5 ${configured ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`} />
+          <ImageIcon className={`h-5 w-5 ${configured ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`} />
         </div>
         <div>
           <div className="font-medium">PixelSEO</div>
@@ -96,10 +96,11 @@ interface SettingsData {
 }
 
 interface GenerateResult {
-  success:           boolean;
-  error?:            string;
-  media_id?:         string | null;
-  filename?:         string;
+  success:            boolean;
+  error?:             string;
+  media_id?:          string | null;
+  image_url?:         string;
+  filename?:          string;
   credits_remaining?: number | null;
   seo?: {
     alt_text: string;
@@ -113,10 +114,8 @@ function SettingsPage() {
   const [isSaving, setIsSaving]   = React.useState(false);
   const [message, setMessage]     = React.useState<{ text: string; ok: boolean } | null>(null);
 
-  // Form state — blank means "don't overwrite existing value"
   const [apiKey, setApiKey] = React.useState('');
 
-  // Generate panel
   const [genPrompt,      setGenPrompt]      = React.useState('');
   const [genOrientation, setGenOrientation] = React.useState('landscape');
   const [genFormat,      setGenFormat]      = React.useState('webp');
@@ -195,7 +194,7 @@ function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <CircleNotch className="h-6 w-6 animate-spin text-muted-foreground" />
+        <CircleNotchIcon className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -214,8 +213,8 @@ function SettingsPage() {
           {message && (
             <span className={`text-sm flex items-center gap-1 ${message.ok ? 'text-green-600' : 'text-red-600'}`}>
               {message.ok
-                ? <CheckCircle className="h-4 w-4" />
-                : <WarningCircle className="h-4 w-4" />}
+                ? <CheckCircleIcon className="h-4 w-4" />
+                : <WarningCircleIcon className="h-4 w-4" />}
               {message.text}
             </span>
           )}
@@ -225,8 +224,8 @@ function SettingsPage() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50"
           >
             {isSaving
-              ? <CircleNotch className="h-4 w-4 animate-spin" />
-              : <FloppyDisk className="h-4 w-4" />}
+              ? <CircleNotchIcon className="h-4 w-4 animate-spin" />
+              : <FloppyDiskIcon className="h-4 w-4" />}
             {isSaving ? 'Saving…' : 'Save'}
           </button>
         </div>
@@ -240,11 +239,49 @@ function SettingsPage() {
             : 'border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
         }`}>
           {current.configured
-            ? <CheckCircle className="h-4 w-4 shrink-0" />
-            : <WarningCircle className="h-4 w-4 shrink-0" />}
+            ? <CheckCircleIcon className="h-4 w-4 shrink-0" />
+            : <WarningCircleIcon className="h-4 w-4 shrink-0" />}
           {current.configured
             ? 'API key configured. Plugin is ready.'
             : 'Enter your pixelseo.ai API key below to get started.'}
+        </div>
+      )}
+
+      {/* Onboarding steps — shown only when not yet configured */}
+      {current && !current.configured && (
+        <div className="border rounded-lg p-6 space-y-4">
+          <h2 className="text-base font-semibold">Get started in 3 steps</h2>
+          <ol className="space-y-3 text-sm">
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">1</span>
+              <span>
+                <span className="font-medium">Create a free account</span> at{' '}
+                <a href="https://pixelseo.ai" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-0.5">
+                  pixelseo.ai <ArrowSquareOutIcon className="h-3 w-3" />
+                </a>
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">2</span>
+              <span>
+                <span className="font-medium">Add credits</span> — visit{' '}
+                <a href="https://pixelseo.ai/pricing" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-0.5">
+                  pixelseo.ai/pricing <ArrowSquareOutIcon className="h-3 w-3" />
+                </a>
+                {' '}to purchase a credit pack. Each image generation costs 1 credit.
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</span>
+              <span>
+                <span className="font-medium">Create an API key</span> in your{' '}
+                <a href="https://pixelseo.ai/dashboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-0.5">
+                  pixelseo.ai dashboard <ArrowSquareOutIcon className="h-3 w-3" />
+                </a>
+                {' '}and paste it below.
+              </span>
+            </li>
+          </ol>
         </div>
       )}
 
@@ -263,7 +300,7 @@ function SettingsPage() {
             pixelseo.ai API Key
             {current?.pixelseo_api_key_set && (
               <span className="text-xs text-green-600 font-normal flex items-center gap-1">
-                <CheckCircle className="h-3 w-3" /> set
+                <CheckCircleIcon className="h-3 w-3" /> set
               </span>
             )}
           </label>
@@ -282,7 +319,7 @@ function SettingsPage() {
               rel="noopener noreferrer"
               className="text-primary hover:underline inline-flex items-center gap-0.5"
             >
-              pixelseo.ai dashboard <ArrowSquareOut className="h-3 w-3" />
+              pixelseo.ai dashboard <ArrowSquareOutIcon className="h-3 w-3" />
             </a>
             . Each image generation costs 1 credit.
           </p>
@@ -292,7 +329,7 @@ function SettingsPage() {
       {/* Test generation */}
       <div className="border rounded-lg p-6 space-y-5">
         <div className="flex items-center gap-2">
-          <Sparkle className="h-5 w-5 text-muted-foreground" />
+          <SparkleIcon className="h-5 w-5 text-muted-foreground" />
           <h2 className="text-lg font-semibold">Test Generation</h2>
         </div>
         <p className="text-sm text-muted-foreground">
@@ -345,8 +382,8 @@ function SettingsPage() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50"
           >
             {isGenerating
-              ? <CircleNotch className="h-4 w-4 animate-spin" />
-              : <Sparkle className="h-4 w-4" />}
+              ? <CircleNotchIcon className="h-4 w-4 animate-spin" />
+              : <SparkleIcon className="h-4 w-4" />}
             {isGenerating ? 'Generating…' : 'Generate test image'}
           </button>
 
@@ -360,7 +397,7 @@ function SettingsPage() {
               {genResult.success ? (
                 <>
                   <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-medium">
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircleIcon className="h-4 w-4" />
                     Image generated and uploaded to media library
                   </div>
                   <div className="space-y-1.5 text-muted-foreground">
@@ -382,7 +419,7 @@ function SettingsPage() {
                 </>
               ) : (
                 <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
-                  <WarningCircle className="h-4 w-4" />
+                  <WarningCircleIcon className="h-4 w-4" />
                   {genResult.error ?? 'Unknown error'}
                 </div>
               )}

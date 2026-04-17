@@ -20,11 +20,13 @@ export function pixelseoPlugin(
   _options: PixelSEOOptions = {},
 ): PluginDescriptor<PixelSEOOptions> {
   return {
-    id:         'pixelseo',
-    version:    '0.2.0',
-    entrypoint: '@pixelseo/emdash-plugin/plugin',
-    options:    _options,
-    adminEntry: '@pixelseo/emdash-plugin/admin',
+    id:           'pixelseo',
+    version:      '1.0.0',
+    entrypoint:   '@pixelseo/emdash-plugin/plugin',
+    options:      _options,
+    capabilities: ['network:fetch', 'write:media'],
+    allowedHosts: ['pixelseo.ai', 'images.pixelseo.ai'],
+    adminEntry:   '@pixelseo/emdash-plugin/admin',
     adminPages:   [{ path: '/settings', label: 'PixelSEO', icon: 'image' }],
     adminWidgets: [{ id: 'status', title: 'PixelSEO', size: 'third' }],
   };

@@ -1,16 +1,17 @@
 {
   "name": "@pixelseo/emdash-plugin",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "EmDash CMS plugin for AI-generated SEO images via pixelseo.ai",
   "type": "module",
-  "main": "src/descriptor.ts",
+  "main": "dist/descriptor.js",
   "exports": {
-    ".": "./src/descriptor.ts",
-    "./plugin": "./src/index.ts",
+    ".": "./dist/descriptor.js",
+    "./plugin": "./dist/plugin/index.js",
     "./admin": "./src/admin.tsx"
   },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "keywords": [
     "emdash",
@@ -24,18 +25,19 @@
   "author": "Chris Cagle",
   "license": "MIT",
   "peerDependencies": {
-    "emdash": "^0.1.0",
-    "react": "^18.0.0 || ^19.0.0",
+    "@cloudflare/kumo": "^1.0.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@cloudflare/kumo": "^1.0.0"
+    "emdash": "^0.4.0",
+    "react": "^18.0.0 || ^19.0.0"
   },
-  "dependencies": {},
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250224.0",
     "@types/react": "^19.0.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.7.0"
   },
   "scripts": {
+    "build": "tsup",
     "typecheck": "tsc --noEmit"
   }
 }

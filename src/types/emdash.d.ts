@@ -83,6 +83,9 @@ declare module 'emdash' {
     version: string;
     entrypoint: string;
     options?: TOptions;
+    format?: 'standard' | 'native';
+    capabilities?: string[];
+    allowedHosts?: string[];
     adminEntry?: string;
     adminPages?: PluginAdminPage[];
     adminWidgets?: PluginAdminWidget[];
