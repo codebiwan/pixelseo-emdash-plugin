@@ -5,8 +5,9 @@ An [EmDash CMS](https://emdash.dev) plugin that generates AI-powered, SEO-optimi
 ## Features
 
 - Generate images from a text prompt inside the EmDash admin dashboard
-- Images are stored as WebP (converted server-side via Cloudflare Images) for optimal performance
-- AI-generated alt text and schema metadata included automatically
+- Images stored as WebP (converted server-side via Cloudflare Images) for optimal performance — typically 10x smaller than the source PNG
+- AI-generated alt text stored automatically in the media library
+- AI-generated SEO filename included with every image
 - Supports landscape, portrait, and square orientations
 - Credits remaining shown after each generation
 
@@ -73,7 +74,13 @@ Without this binding, images will still be generated and uploaded but stored as 
 
 ## Usage
 
-Once configured, use the **Test Generation** panel in the PixelSEO settings page to generate images, or call the generate route from your own admin UI code:
+Once configured, use the **Test Generation** panel in the PixelSEO settings page to generate images. Each generated image is automatically:
+
+- Converted to WebP at quality 80
+- Named with an SEO-optimised descriptive filename
+- Stored in your EmDash media library with alt text
+
+You can also call the generate route directly from your own admin UI code:
 
 ```ts
 POST /_emdash/api/plugins/pixelseo/generate
@@ -84,7 +91,15 @@ POST /_emdash/api/plugins/pixelseo/generate
 }
 ```
 
-The response includes the `media_id` of the uploaded image, its filename, alt text, and schema metadata.
+The response includes the `media_id` of the uploaded image, filename, alt text, schema metadata, and credits remaining.
+
+## How it works
+
+1. Your prompt is sent to the pixelseo.ai API
+2. The API returns the image as base64, along with an SEO-optimised filename, alt text, and ImageObject schema
+3. The plugin decodes the image and converts it from PNG to WebP using the Cloudflare `IMAGES` binding
+4. The WebP image is uploaded to Cloudflare R2 via the `MEDIA` binding
+5. A record is inserted into the EmDash D1 media table with filename, mime type, size, and alt text
 
 ## License
 
